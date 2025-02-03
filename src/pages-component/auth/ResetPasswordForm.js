@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,11 +10,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Button } from "../ui/button";
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import logo from "../../../public/images/logo.png";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
 const FormSchema = z.object({
     userEmail: z
     .string()
@@ -118,7 +118,7 @@ export const ResetPasswordForm = () => {
 
                   <Button
                     type="submit"
-                    className="text-white w-full bg-blue-600 hover:bg-unset"
+                    className="text-white w-full bg-primary hover:bg-unset"
                   >
                     Send Password Reset Link
                   </Button>
