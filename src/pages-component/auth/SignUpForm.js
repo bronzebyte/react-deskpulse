@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import googleLogo from "../../../public/images/googleLogo.webp";
-import logo from "../../../public/images/logo.png";
+import googleLogo from "@/images/googleLogo.webp";
+import logo from "@/images/logo.png";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 
