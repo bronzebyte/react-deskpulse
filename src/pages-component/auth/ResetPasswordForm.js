@@ -16,14 +16,15 @@ import { toast } from "@/hooks/use-toast";
 import logo from "@/images/logo.png";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-const FormSchema = z.object({
-    userEmail: z
-    .string()
-    .email({
-        message: "Please enter a valid email address.",
+import { useTranslation } from "next-i18next";
+
+export default function ResetPasswordForm() {
+  const { t } = useTranslation();
+  const FormSchema = z.object({
+    userEmail: z.string().email({
+      message: t("resetPassword.emailValidation"),
     }),
-});
-export const ResetPasswordForm = () => {
+  });
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -33,7 +34,7 @@ export const ResetPasswordForm = () => {
 
   function onSubmit(data) {
     toast({
-      title: "SignIn Successfully",
+      title: t("resetPassword.successMessage"),
     });
     form.reset();
   }
@@ -42,15 +43,15 @@ export const ResetPasswordForm = () => {
       <div className="container">
         <nav className="flex justify-between items-center py-4 container mx-auto">
           <p className="text-title-md2 font-semibold text-black dark:text-white">
-            Reset Password
+            {t("resetPassword.emailLabel")}
           </p>
           <div className="flex items-center gap-2 text-sm">
             <Link href="/dashboard" className="text-gray-600">
-              Dashboard
+              {t("resetPassword.dashboard")}
             </Link>
             <span className="text-gray-400">/</span>
             <p className="text-blue-500">
-              Reset Password
+              {t("resetPassword.resetPasswordTitle")}
             </p>
           </div>
         </nav>
@@ -88,11 +89,9 @@ export const ResetPasswordForm = () => {
           <div className="w-full md:w-1/2 p-8 lg:p-12 m-auto">
             <div className="max-w-md mx-auto">
               <h2 className="mb-3 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Reset Password
+                {t("resetPassword.resetPasswordTitle")}
               </h2>
-              <p class="mb-8">
-                Enter your email address to receive a password reset link.
-              </p>
+              <p class="mb-8">{t("resetPassword.resetPasswordDescription")}</p>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -103,7 +102,9 @@ export const ResetPasswordForm = () => {
                     name="userEmail"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-bold">Email</FormLabel>
+                        <FormLabel className="font-bold">
+                          {t("resetPassword.emailLabel")}
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter your email"
@@ -120,7 +121,7 @@ export const ResetPasswordForm = () => {
                     type="submit"
                     className="text-white w-full bg-primary hover:bg-unset"
                   >
-                    Send Password Reset Link
+                    {t("resetPassword.buttonText")}
                   </Button>
                 </form>
               </Form>
@@ -130,4 +131,4 @@ export const ResetPasswordForm = () => {
       </div>
     </div>
   );
-};
+}

@@ -1,4 +1,4 @@
-import Projects from "@/pages-component/projects/Projects";
+import Projects from "@/pages-component/teams/Team";
 
 export default function index(){
     return(

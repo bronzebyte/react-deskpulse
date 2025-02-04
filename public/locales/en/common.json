@@ -1,0 +1,66 @@
+{
+  "resetPassword": {
+    "resetPasswordTitle": "Reset Password",
+    "resetPasswordDescription": "Enter your email address to receive a password reset link.",
+    "emailLabel": "Email",
+    "buttonText": "Send Password Reset Link",
+    "emailValidation": "Please enter a valid email address.",
+    "successMessage": "Reset Password Successfully",
+    "dashboard":"Dashboard"
+  },
+  "signIn": {
+    "emailValidation": "Please enter a valid email address.",
+    "passwordValidation": {
+      "minLength": "Password must be at least 6 characters.",
+      "capitalLetter": "Password must contain at least one capital letter.",
+      "specialCharacter": "Password must contain at least one special character."
+    },
+    "emailLabel": "Email",
+    "passwordLabel": "Re-type Password",
+    "buttonText": "Sign In",
+    "signInWithGoogle": "Sign in with Google",
+    "dontHaveAccount": "Don't have any account?",
+    "signUp": "Sign Up",
+    "dashboard":"Dashboard"
+  },
+  "signUp": {
+    "emailValidation": "Please enter a valid email address.",
+    "passwordValidation": {
+      "minLength": "Password must be at least 6 characters.",
+      "capitalLetter": "Password must contain at least one capital letter.",
+      "specialCharacter": "Password must contain at least one special character."
+    },
+    "firstNameMinLength": "First name must be at least 4 characters.",
+    "lastNameMinLength": "Last name must be at least 4 characters.",
+    "phoneNumberMinLength": "Phone number must be at least 10 digits.",
+    "passwordMismatch": "Passwords do not match.",
+    "buttonText": "Create Account",
+    "signUpWithGoogle": "Sign up with Google",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "emailLabel": "Email",
+    "phoneNumberLabel": "Phone Number",
+    "passwordLabel": "Password",
+    "reTypePasswordLabel": "Re-type Password",
+    "signUp": "Sign Up",
+    "dashboard":"Dashboard"
+  },
+  "createProject": {
+    "titleLabel": "Board title",
+    "descriptionLabel": "Board Description",
+    "workspaceLabel": "Workspace",
+    "visibilityLabel": "Visibily",
+    "buttonText": "Create Project",
+    "titleRequired": "Board title is required",
+    "descriptionRequired": "Board Description is required",
+    "createNewBoard": "Create New Board"
+  },
+  "createTeam": {
+    "titleLabel": "Team title",
+    "buttonText": "Create Team",
+    "titleRequired": "Team title is required",
+    "successMessage": "Team has been created successfully"
+  }
+}

@@ -27,25 +27,66 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { mutate } from "swr";
+import { useTranslation } from "next-i18next";
 
-const formSchema = z.object({
-  title: z.string().min(1, { message: "Board title is required" }),
-  workspace: z.string().min(1),
-  visibility: z.string().min(1),
-});
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export default function WorkspaceDashboard() {
   const [isOpen, setIsOpen] = useState(false);
+  const {t}=useTranslation()
+  const formSchema = z.object({
+    title: z.string().min(1, { message: t("createProject.titleRequired") }),
+    workspace: z.string().min(1),
+    visibility: z.string().min(1),
+    description: z.string().min(1, { message: t("createProject.descriptionRequired") })
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       workspace: "rajalwaysfirst's workspace",
       visibility: "Workspace",
+      description: ""
     },
   });
 
-  function onSubmit(values) {
-    console.log(values);
+  async function onSubmit(data) {
+    const token = localStorage.getItem("token")
+    const teamId=localStorage.getItem("teamId")
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: data?.title,
+          description: data?.description,
+          teamId
+        }),
+      });
+      const responseData = await response.json();
+      if (!response.ok) {
+        toast({
+          title: responseData?.message || "project created failed",
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Project has been created successfully", className: "bg-[#07bc0c]" });
+        form.reset();
+      }
+      mutate(`${API_BASE_URL}/projects`);
+    } catch (error) {
+      console.log(error?.message, "error+++");
+    } finally {
+      setIsLoading(false)
+    }
   }
   const router = useRouter();
   return (
@@ -126,7 +167,7 @@ export default function WorkspaceDashboard() {
               </Card>
             </SheetTrigger>
             <SheetContent side="right" className="w-[400px] p-6">
-              <h2 className="text-xl font-semibold mb-4">Create New Board</h2>
+              <h2 className="text-xl font-semibold mb-4">{t("createProject.createNewBoard")}</h2>
 
               <Form {...form}>
                 <form
@@ -138,7 +179,7 @@ export default function WorkspaceDashboard() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Board title</FormLabel>
+                        <FormLabel>{t("createProject.titleLabel")}</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter board title" {...field} />
                         </FormControl>
@@ -146,13 +187,25 @@ export default function WorkspaceDashboard() {
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("createProject.descriptionLabel")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter board descrioption" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="workspace"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Workspace</FormLabel>
+                        <FormLabel>{t("createProject.workspaceLabel")}</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -177,7 +230,7 @@ export default function WorkspaceDashboard() {
                     name="visibility"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Visibility</FormLabel>
+                        <FormLabel>{t("createProject.visibilityLabel")}</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -199,7 +252,7 @@ export default function WorkspaceDashboard() {
 
                   <div className="pt-2">
                     <Button type="submit" className="w-full bg-primary">
-                      Create
+                      {isLoading?"Loading":t("createProject.buttonText")}
                     </Button>
                   </div>
                 </form>
