@@ -21,13 +21,13 @@ const recentItems = [
 
 export default function RecentlyViewed({title}) {
   return (
-    <div className="w-full px-4 py-6">
+    <div className="w-fit px-4">
       <h2 className="text-xl font-semibold mb-4 text-foreground">{title}</h2>
       <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
         {recentItems.map((item) => (
-          <Card key={item.id} className="flex-shrink-0 w-[300px] overflow-hidden group">
-            <CardContent className="p-0 relative">
-              <div className="w-full h-[200px] bg-green-300" />
+          <Card key={item.id} className="flex-shrink-0 overflow-hidden group rounded-none">
+            <CardContent className="p-0 relative ">
+              <div className="w-[193px] h-[93px] bg-green-300" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-center">
                 <h3 className="text-white font-medium">{item.title}</h3>

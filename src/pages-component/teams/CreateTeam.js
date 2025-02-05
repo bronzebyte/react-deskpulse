@@ -59,6 +59,7 @@ export const CreateTeam = () => {
                 localStorage.setItem("teamId",responseData?._id)
                 toast({ title: t("createTeam.successMessage"), className: "bg-[#07bc0c]" });
                 form.reset();
+                setIsOpen(false)
             }
 
             mutate(`${API_BASE_URL}/teams`);

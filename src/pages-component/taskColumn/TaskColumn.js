@@ -4,8 +4,27 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Plus, X, Edit } from "lucide-react";
 import { DialogBox } from "@/pages-component/dialogBox/DialogBox";
-
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "@/hooks/use-toast";
+import useSWR, { mutate } from "swr";
+import { useRouter } from "next/router";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const fetcher = (url) => {
+  const token = localStorage.getItem("token");
+  return fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};
 export const TaskColumn = ({ columns, setColumns }) => {
+    const router = useRouter();
+      const { projectId } = router.query;
+
   const [addingCardForColumnId, setAddingCardForColumnId] = useState(null);
   const [newCardContent, setNewCardContent] = useState("");
   const [editingCardId, setEditingCardId] = useState(null);
@@ -15,6 +34,64 @@ export const TaskColumn = ({ columns, setColumns }) => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCardContent, setSelectedCardContent] = useState("");
+  const { data, error, isLoading } = useSWR(`${API_BASE_URL}/projects/${projectId}`, fetcher);
+  const formSchema = z.object({
+    title: z.string().min(1, { message: "List title is required" }),
+    description: z.string().min(1, { message: "List description is required" })
+  });
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: ""
+    },
+  });
+  async function onSubmit(data, columnId) {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tickets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: data?.title,
+          description: data?.description,
+          projectId,
+        }),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: responseData?.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({ title: "Project Ticket has been created successfully", className: "bg-[#07bc0c]" });
+        setColumns((prevColumns) => ({
+          ...prevColumns,
+          [columnId]: {
+            ...prevColumns[columnId],
+            tasks: [
+              ...prevColumns[columnId].tasks,
+              { id: responseData._id, content: data.title },
+            ],
+          },
+        }));
+        localStorage.setItem("ticketId", responseData?._id)
+        form.reset();
+        setAddingCardForColumnId(null)
+      }
+      mutate(`${API_BASE_URL}/tickets`);
+    } catch (error) {
+      console.log(error?.message, "error+++");
+    }
+  }
+
   const handleCancel = () => {
     setNewCardContent("");
     setAddingCardForColumnId(null);
@@ -161,31 +238,59 @@ export const TaskColumn = ({ columns, setColumns }) => {
               {addingCardForColumnId === columnId ? (
                 <>
                   <div className="flex gap-2 mt-2">
-                    <Input
-                      type="text"
-                      className="mb-2"
-                      value={newCardContent}
-                      onChange={(e) => setNewCardContent(e.target.value)}
-                      onKeyDown={(e) =>
-                        e.key === "Enter" && addNewCard(columnId)
-                      }
-                    />
+                    <Form {...form} className="mt-6">
+                      <form onSubmit={form.handleSubmit((data) => onSubmit(data, columnId))} className="space-y-6">
+                        <FormField
+                          control={form.control}
+                          name="title"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  className="mb-2"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  className="mb-2"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          type="submit"
+                          size="sm"
+                          className="bg-primary hover:bg-unset"
+                        >
+                          Add card
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-black hover:bg-unset"
+                          onClick={handleCancel}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </form>
+                    </Form>
                   </div>
-                  <Button
-                    onClick={() => addNewCard(columnId)}
-                    size="sm"
-                    className="bg-primary hover:bg-unset"
-                  >
-                    Add card
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-black hover:bg-unset"
-                    onClick={handleCancel}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+
                 </>
               ) : (
                 <Button

@@ -23,13 +23,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MemberSidebar } from "@/pages-component/members/Sidebar";
 import { useState } from "react";
 import { mutate } from "swr";
+import { useRouter } from "next/router";
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }),
 });
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function Members() {
-  const[isLoading,setIsLoading]=useState()
+  const router = useRouter();
+  const { teamId } = router.query;
+  const [isLoading, setIsLoading] = useState();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,37 +41,35 @@ export default function Members() {
   });
 
   async function onSubmit(data) {
-   const teamId= localStorage.getItem("teamId")
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/teams/${teamId}/member`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data?.email,
+          role: "member",
+        }),
+      });
+      const responseData = await response.json();
+      if (!response.ok) {
+        toast({
+          title: responseData?.message,
+          variant: "destructive",
+        });
+      } else {
+        // toast({ title: "Team has been created successfully", className: "bg-[#07bc0c]" });
+        form.reset();
+      }
 
-        setIsLoading(true)
-        try {
-            const response = await fetch(`${API_BASE_URL}/teams/${teamId}/member`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: data?.email,
-                    role:"member"
-                }),
-            });
-            const responseData = await response.json();
-            if (!response.ok) {
-                toast({
-                    title: responseData?.message,
-                    variant: "destructive",
-                });
-            } else {
-                // toast({ title: "Team has been created successfully", className: "bg-[#07bc0c]" });
-                form.reset();
-            }
-
-            mutate(`${API_BASE_URL}/teams/${teamId}/member`);
-        } catch (error) {
-            console.log(error?.message, "error+++");
-        } finally {
-            setIsLoading(false)
-        }
+      mutate(`${API_BASE_URL}/teams/${teamId}/member`);
+    } catch (error) {
+      console.log(error?.message, "error+++");
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <div className="min-h-screen bg-background container mx-auto">
