@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { mutate } from "swr";
 import { useState } from "react";
 import { useTranslation } from "next-i18next";
+import Cookies from "js-cookie";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function SignInForm() {
@@ -69,6 +70,11 @@ export default function SignInForm() {
       } else {
         const responseData = await response.text();
         localStorage.setItem("token", responseData);
+        Cookies.set("token", responseData, {
+          expires: 1,
+          path: "/",
+        })
+        
         toast({ title: "Login Successful", className: "bg-[#07bc0c]" });
         form.reset();
       }
@@ -97,25 +103,8 @@ export default function SignInForm() {
           </div>
         </nav>
         <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm">
-          <div className="w-full md:w-1/2 p-8 lg:p-12">
-            <div className="flex items-center gap-2 mb-8 justify-center">
-              <div className="bg-blue-600 text-white p-2 rounded">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <rect width="24" height="24" rx="4" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold">TailAdmin</span>
-            </div>
-
-            <p className="text-gray-500 mb-8 text-center">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              suspendisse.
-            </p>
+          <div className="w-full md:w-1/2 p-8 lg:p-12 m-auto">
+            
 
             <div className="relative h-64 md:h-96">
               <Image
@@ -129,8 +118,7 @@ export default function SignInForm() {
 
           <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
             <div className="max-w-md mx-auto">
-              <p className="text-blue-600 font-medium mb-2">Start for free</p>
-              <h2 className="text-2xl font-bold mb-8">Sign In to TailAdmin</h2>
+              
 
               <Form {...form}>
                 <form

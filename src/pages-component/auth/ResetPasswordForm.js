@@ -56,25 +56,8 @@ export default function ResetPasswordForm() {
           </div>
         </nav>
         <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm">
-          <div className="w-full md:w-1/2 p-8 lg:p-12 border-r border-r-gray">
-            <div className="flex items-center gap-2 mb-8 justify-center">
-              <div className="bg-blue-600 text-white p-2 rounded">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <rect width="24" height="24" rx="4" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold">TailAdmin</span>
-            </div>
-
-            <p className="text-gray-500 mb-8 text-center">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              suspendisse.
-            </p>
+          <div className="w-full md:w-1/2 p-8 lg:p-12 border-r border-r-gray m-auto">
+           
 
             <div className="relative h-64 md:h-96">
               <Image

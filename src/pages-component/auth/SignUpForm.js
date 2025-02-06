@@ -130,25 +130,10 @@ const { t } = useTranslation();
                     </div>
                 </nav>
                 <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm">
-                    <div className="w-full md:w-1/2 p-8 lg:p-12">
-                        <div className="flex items-center gap-2 mb-8 justify-center">
-                            <div className="bg-blue-600 text-white p-2 rounded">
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                >
-                                    <rect width="24" height="24" rx="4" />
-                                </svg>
-                            </div>
-                            <span className="text-xl font-bold">TailAdmin</span>
-                        </div>
+                    <div className="w-full md:w-1/2 p-8 lg:p-12 m-auto">
+                        
 
-                        <p className="text-gray-500 mb-8 text-center">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                            suspendisse.
-                        </p>
+                       
 
                         <div className="relative h-64 md:h-96">
                             <Image
@@ -162,8 +147,6 @@ const { t } = useTranslation();
 
                     <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
                         <div className="max-w-md mx-auto">
-                            <p className="text-blue-600 font-medium mb-2">Start for free</p>
-                            <h2 className="text-2xl font-bold mb-8">Sign Up to TailAdmin</h2>
 
                             <Form {...form}>
                                 <form

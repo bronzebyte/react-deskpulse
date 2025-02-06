@@ -6,14 +6,29 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/hooks/use-toast"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Cookies from "js-cookie"
 import { Bold, HelpCircle, Link2, List, MoreHorizontal, Type } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { mutate } from "swr"
+import useSWR, { mutate } from "swr"
 import * as z from "zod";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const fetcher = (url) => {
+  const token = Cookies.get('token')
+  return fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json())
+}
+export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent, selectedCardId }) => {
 
-export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }) => {
+  const { data: fetchComments, error, isLoading } = useSWR(
+    selectedCardId ? `${API_BASE_URL}/tickets/${selectedCardId}/comments` : null,
+    fetcher
+  );
+
   const formSchema = z.object({
     description: z.string().min(1, { message: "Comment description is required" })
   });
@@ -24,10 +39,12 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
     },
   });
   async function onSubmit(data) {
-    const ticketId = localStorage.getItem("ticketId");
-    const token = localStorage.getItem("token")
+    const token = Cookies.get('token')
+    const refetchData = () => {
+      mutate(`${API_BASE_URL}/tickets/${selectedCardId}/comments`);
+    };
     try {
-      const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/tickets/${selectedCardId}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,6 +67,7 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
         toast({ title: responseData?.message, className: "bg-[#07bc0c]" });
 
         form.reset();
+        refetchData()
       }
       mutate(`${API_BASE_URL}/tickets`);
     } catch (error) {
@@ -174,7 +192,7 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
                     WQ
                   </div>
                   <Form {...form} className="mt-6 w-full">
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                       <FormField
                         control={form.control}
                         name="description"
@@ -184,7 +202,7 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
                               <Input
                                 type="text"
                                 placeholder="Write a comment..."
-                                className="flex-1"
+                                className="flex-1 w-full"
                                 {...field}
                               />
                             </FormControl>
@@ -192,7 +210,7 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
                           </FormItem>
                         )}
                       />
-                      <Button className="bg-primary" type="submit">
+                      <Button className="bg-primary mt-2" type="submit">
                         Save
                       </Button>
                     </form>
@@ -200,6 +218,15 @@ export const DialogBox = ({ isDialogOpen, setIsDialogOpen, selectedCardContent }
 
                 </div>
               </div>
+              {fetchComments?.comments?.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white shadow-lg p-4 border border-gray-200 rounded-lg mb-4"
+                >
+                  <p className="text-gray-900 text-sm leading-relaxed">{item?.description}</p>
+                </div>
+              ))}
+
 
               <div className="flex gap-3 mt-3">
                 <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-medium">

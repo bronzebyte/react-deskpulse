@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,25 +9,44 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-const initialColumns = {
-  todo: { title: "To Do", tasks: [] },
-  doing: { title: "Doing", tasks: [] },
-  done: { title: "Done", tasks: [] },
-};
+
 import { useTranslation } from "next-i18next";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/common/header/Header";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import Sidebar from "@/components/common/sidebar/Sidebar";
+import WorkSpaceHeader from "./Header";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+const fetcher = (url) => {
+  const token = Cookies.get('token');
+  return fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};
 export default function ProjectView() {
-  const [columns, setColumns] = useState(initialColumns);
+  const router = useRouter();
+  const [columns, setColumns] = useState([]);
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useTranslation()
+  const [projectId, setProjectId] = useState(null);
 
+  useEffect(() => {
+    if (router.query.projectId) {
+      setProjectId(router.query.projectId);
+    }
+  }, [router.query]);
+  const token = Cookies.get('token');
+
+  const { data: projectData } = useSWR(projectId?`${API_BASE_URL}/projects/${projectId}`:null,
+    fetcher
+  );
   const formSchema = z.object({
     title: z.string().min(1, { message: "List title is required" }),
   });
@@ -37,22 +56,17 @@ export default function ProjectView() {
       title: "",
     },
   });
-  const addNewList = () => {
-    if (newListTitle.trim()) {
-      const newId = Date.now().toString();
-      setColumns({
-        ...columns,
-        [newId]: { title: newListTitle, tasks: [] },
-      });
-      setNewListTitle("");
-      setIsAddingList(false);
-    }
-  };
+  
+  useEffect(()=>{
+    setColumns(projectData)
+  },[projectData])
 
-  const router = useRouter();
-    const { projectId } = router.query;
+
   async function onSubmit(data) {
-    const token = localStorage.getItem("token")
+    const token = Cookies.get('token')
+    const refetchData = () => {
+      mutate(`${API_BASE_URL}/projects/${projectId}`);
+    };
     setIsLoading(true)
     try {
       const response = await fetch(`${API_BASE_URL}/projects/${projectId}/lists`, {
@@ -79,6 +93,7 @@ export default function ProjectView() {
           [responseData._id]: { title: data.title, tasks: [] },
         }));
         form.reset();
+        refetchData()
         setIsAddingList(false);
       }
 
@@ -92,13 +107,18 @@ export default function ProjectView() {
   return (
     <>
     <Header/>
+
+    <div className="flex ">
+    <Sidebar/>
     <div
-      className="flex gap-4 p-4 overflow-x-auto min-h-screen"
+      className=" gap-4 overflow-x-hidden h-[calc(100vh-48px)] w-full"
       style={{
         background:
-          "linear-gradient(135deg, rgb(13, 17, 23) 0%, rgb(88, 130, 80) 100%)",
+        "linear-gradient(135deg, rgb(13, 17, 23) 0%, rgb(88, 130, 80) 100%)",
       }}
-    >
+      >
+      <WorkSpaceHeader/>
+      <div className="flex gap-4 py-4 p-4 h-full overflow-x-auto">
       <TaskColumn columns={columns} setColumns={setColumns} />
       {isAddingList ? (
         <div className="w-72">
@@ -155,6 +175,8 @@ export default function ProjectView() {
           Add a new list
         </Button>
       )}
+    </div>
+    </div>
     </div>
     </>
   );

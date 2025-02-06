@@ -11,7 +11,7 @@ export default function Sidebar() {
   ]
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-[#1E1B22]">
+    <div className="flex flex-col w-64 h-[calc(100vh-48px)] bg-[#1E1B22]">
       <div className="flex items-center justify-between p-4 border-b border-[#2D2A33]">
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 text-white bg-pink-600 rounded">B</div>

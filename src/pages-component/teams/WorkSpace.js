@@ -30,11 +30,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import useSWR, { mutate } from "swr";
 import { useTranslation } from "next-i18next";
+import Cookies from "js-cookie";
 
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const fetcher = (url) => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get('token');
   return fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -51,8 +52,7 @@ export default function WorkspaceDashboard() {
   const { t } = useTranslation()
   const formSchema = z.object({
     title: z.string().min(1, { message: t("createProject.titleRequired") }),
-    workspace: z.string().min(1),
-    visibility: z.string().min(1),
+    workspace: z.string().min(1,{message:"Please select workspace"}),
     description: z.string().min(1, { message: t("createProject.descriptionRequired") })
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +61,7 @@ export default function WorkspaceDashboard() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      workspace: "rajalwaysfirst's workspace",
+      workspace: "",
       visibility: "Workspace",
       description: ""
     },
@@ -69,14 +69,14 @@ export default function WorkspaceDashboard() {
 
 
   useEffect(() => {
-    if (data) {
+    if (Array.isArray(data)) {  // Ensure data is an array before proceeding
       setTeamData(data);
-
+  
       // Fetch projects for each team
       data.forEach((team) => {
         fetch(`${API_BASE_URL}/teams/${team._id}/projects`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get('token')}`,
             "Content-Type": "application/json",
           },
         })
@@ -86,10 +86,13 @@ export default function WorkspaceDashboard() {
           })
           .catch((err) => console.error("Error fetching projects:", err));
       });
+      
     }
   }, [data]);
+  
   async function onSubmit(data) {
-    const token = localStorage.getItem("token")
+    
+    const token = Cookies.get('token')
     try {
       const response = await fetch(`${API_BASE_URL}/projects`, {
         method: "POST",
@@ -111,11 +114,10 @@ export default function WorkspaceDashboard() {
           variant: "destructive",
         });
       } else {
-        localStorage.setItem("projectId", responseData?._id)
         toast({ title: "Project has been created successfully", className: "bg-[#07bc0c]" });
         form.reset();
         setSelectedTeamId(null);
-
+        refetchData()
       }
       mutate(`${API_BASE_URL}/projects`);
     } catch (error) {
@@ -125,6 +127,15 @@ export default function WorkspaceDashboard() {
     }
   }
   const router = useRouter();
+
+  useEffect(() => {
+    if (selectedTeamId) {
+      const selectedTeam = teamData.find((team) => team._id === selectedTeamId);
+      if (selectedTeam) {
+        form.setValue("workspace", selectedTeam.title, { shouldValidate: true });
+      }
+    }
+  }, [selectedTeamId, teamData, form]);
   return (
     <>
       {Array.isArray(teamData) && teamData.map((item) => {
@@ -167,53 +178,30 @@ export default function WorkspaceDashboard() {
                 </div>
               </header>
               <main className="container px-4 py-6">
-                <div className="flex gap-4">
+                <div className="grid grid-cols-4 gap-4">
                 {teamProject[item?._id]?.map((item)=>{
                     return(
 
-                  <Link href={`/project-view/${item?._id}`}>
+                  <Link href={`/project-view/${item?._id}`} key={item?._id}>
                     <Card className="group relative aspect-[1.5] overflow-hidden w-[193px] h-[96px] rounded-none">
-                      <div className="bg-gray-500" />
-                      <div className="absolute inset-0 bg-black/20" />
+                      <div className="bg-green-500" />
+                      <div className="absolute inset-0 bg-gray-500" />
                       <div className="absolute bottom-0 p-4">
-                        <h3 className="text-lg font-semibold text-white">{item?.title}</h3>
+                        <p className="text-lg font-bold text-white">{item?.title}</p>
                       </div>
                     </Card>
                   </Link>
                     )
                   })}
-                  {/* <Link href="#project-b">
-                    <Card className="group relative aspect-[1.5] overflow-hidden w-[193px] h-[96px] rounded-none">
-                      <div className="bg-gray-500" />
-                      <div className="absolute inset-0 bg-black/20" />
-                      <div className="absolute bottom-0 p-4">
-                        <h3 className="text-lg font-semibold text-white">Project B</h3>
-                      </div>
-                    </Card>
-                  </Link>
-                  <Link href="#welcome">
-                    <Card className="group relative aspect-[1.5] bg-emerald-500 w-[193px] h-[96px] rounded-none">
-                      <div className="p-4">
-                        <h3 className="text-lg font-semibold text-white">
-                          Welcome Board
-                        </h3>
-                      </div>
-                    </Card>
-                  </Link> */}
-
-                  {/* Sheet for Create New Board */}
+                 
                   <Drawer isOpen={selectedTeamId===item?._id} setIsOpen={(open) => setSelectedTeamId(open ? item?._id : null)}>
                     <SheetTrigger asChild>
                       <Card
                         className="group relative aspect-[1.5] !bg-white p-4 cursor-pointer w-[193px] h-[96px] rounded-none"
-                        onClick={() =>
-                          setSelectedTeamId(item?._id)
-                          }
-
+                        onClick={() => setSelectedTeamId(item?._id)}
                       >
-                        <div className="flex h-full flex-col items-start justify-between">
+                        <div className="flex h-full flex-col items-start justify-center">
                           <h3 className="text-lg font-semibold">Create new board</h3>
-                          <p className="text-sm text-muted-foreground">7 remaining</p>
                         </div>
                       </Card>
                     </SheetTrigger>
@@ -258,8 +246,12 @@ export default function WorkspaceDashboard() {
                               <FormItem>
                                 <FormLabel>{t("createProject.workspaceLabel")}</FormLabel>
                                 <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
+                                  onValueChange={(value) => {
+                                    const selectedTeam = teamData.find(team => team.title === value);
+                                    setSelectedTeamId(selectedTeam?._id);
+                                    field.onChange(value);
+                                  }}
+                                  value={field.value}
                                 >
                                   <FormControl>
                                     <SelectTrigger>
@@ -267,39 +259,22 @@ export default function WorkspaceDashboard() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    <SelectItem value="rajalwaysfirst's workspace">
-                                      rajalwaysfirst's workspace
+                                  {teamData?.map((item)=>{
+                                    return(
+
+                                    <SelectItem value={item?.title} key={item?._id}>
+                                      {item?.title}
                                     </SelectItem>
+                                    )
+                                  })}
                                   </SelectContent>
                                 </Select>
+                                <FormMessage />
                               </FormItem>
                             )}
                           />
 
-                          <FormField
-                            control={form.control}
-                            name="visibility"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t("createProject.visibilityLabel")}</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Select visibility" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="Workspace">Workspace</SelectItem>
-                                    <SelectItem value="Public">Public</SelectItem>
-                                    <SelectItem value="Private">Private</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </FormItem>
-                            )}
-                          />
+                          
 
                           <div className="pt-2">
                             <Button type="submit" className="w-full bg-primary">

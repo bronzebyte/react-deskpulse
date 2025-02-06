@@ -19,6 +19,7 @@ import { toast } from "@/hooks/use-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 import { useTranslation } from "next-i18next";
+import Cookies from "js-cookie";
 
 export const CreateTeam = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +37,7 @@ export const CreateTeam = () => {
     });
 
     async function onSubmit(data) {
-        const token = localStorage.getItem("token")
+        const token = Cookies.get('token')
         setIsLoading(true)
         try {
             const response = await fetch(`${API_BASE_URL}/teams`, {
@@ -56,7 +57,6 @@ export const CreateTeam = () => {
                     variant: "destructive",
                 });
             } else {
-                localStorage.setItem("teamId",responseData?._id)
                 toast({ title: t("createTeam.successMessage"), className: "bg-[#07bc0c]" });
                 form.reset();
                 setIsOpen(false)
