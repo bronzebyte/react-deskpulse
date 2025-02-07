@@ -21,7 +21,8 @@
     "signInWithGoogle": "Sign in with Google",
     "dontHaveAccount": "Don't have any account?",
     "signUp": "Sign Up",
-    "dashboard":"Dashboard"
+    "dashboard":"Dashboard",
+    "signInSuccess":"Signin Successful"
   },
   "signUp": {
     "emailValidation": "Please enter a valid email address.",
@@ -45,7 +46,8 @@
     "passwordLabel": "Password",
     "reTypePasswordLabel": "Re-type Password",
     "signUp": "Sign Up",
-    "dashboard":"Dashboard"
+    "dashboard":"Dashboard",
+    "signUpSuccess":"SignUp Successful"
   },
   "createProject": {
     "titleLabel": "Board title",
@@ -55,12 +57,52 @@
     "buttonText": "Create Project",
     "titleRequired": "Board title is required",
     "descriptionRequired": "Board Description is required",
-    "createNewBoard": "Create New Board"
+    "createNewBoard": "Create New Board",
+    "projectCreatedSuccessFully":"Project has been created successfully",
+    "selectWorkSpace":"Please select workspace"
   },
   "createTeam": {
     "titleLabel": "Team title",
     "buttonText": "Create Team",
     "titleRequired": "Team title is required",
     "successMessage": "Team has been created successfully"
+  },
+  "addList":{
+    "addList":"Add List",
+    "addNewList":"Add New List",
+    "listTitleRequired":"List title is required"
+  },
+  "getComments":{
+    "confirmationMessage":"Are you sure you want to delete this comment?",
+    "cancelBtnText":"Cancel",
+    "deleteBtnText":"Delete",
+    "saveBtnText":"Save",
+    "discardChanges":"Discard Changes",
+    "editBtnText":"Edit"
+  },
+  "members":{
+    "inviteToWorkSpace":"Invite to workspace",
+    "boardTitleLabel":"Board title",
+    "inviteSomeoneToWorkSpace":"Invite someone to this workspace with a link:",
+    "copyLink":"Copy Link",
+    "workSpaceMember":"Workspace members",
+    "workSpaceDescription":" Workspace members can view and join all Workspace visible boards and create new boards in the Workspace.",
+    "viewBoards":"View boards",
+    "admin":"Admin",
+    "leave":"Leave",
+    "emailRequired":"Email is required",
+    "joinRequest":"Join requests",
+    "guests":"Guests",
+    "collaborators":"Collaborators"
+  },
+  "tickets":{
+    "ticketCreated":"Project Ticket has been created successfully",
+    "addCardBtnText":"Add card",
+    "addACard":"Add a card",
+    "listTitleRequired":"List title is required"
+    
+  },
+  "createComment":{
+    "commentDescriptionRequired":"Comment description is required"
   }
 }

@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CreateTeam } from "@/pages-component/teams/CreateTeam";
+import { TeamDrawerForm } from "@/pages-component/teamDrawerForm/TeamDraweForm";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
@@ -83,7 +83,7 @@ export default function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <CreateTeam />
+        <TeamDrawerForm title={"Create Team"} method="POST"/>
       </div>
 
       {/* Right section */}

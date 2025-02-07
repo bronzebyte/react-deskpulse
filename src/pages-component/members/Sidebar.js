@@ -1,21 +1,24 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { useTranslation } from "next-i18next";
 
 
 export const MemberSidebar = () => {
+      const { t } = useTranslation();
+    
     return (
 
         <div className="w-64 flex-shrink-0">
-            <h2 className="text-lg font-semibold mb-4">Collaborators 1/10</h2>
+            <h2 className="text-lg font-semibold mb-4">{t("members.collaborators")}1/10</h2>
             <nav className="space-y-1">
                 <a href="#" className="flex items-center justify-between px-3 py-2 bg-blue-50 text-blue-600 rounded-md">
-                    Workspace members (1)
+                    {t("members.workSpaceMember")} (1)
                 </a>
                 <a href="#" className="flex items-center justify-between px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md">
-                    Guests (0)
+                    {t("members.guests")} (0)
                 </a>
                 <a href="#" className="flex items-center justify-between px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-md">
-                    Join requests (0)
+                    {t("members.joinRequest")} (0)
                 </a>
             </nav>
 

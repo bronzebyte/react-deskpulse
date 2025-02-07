@@ -25,12 +25,14 @@ import { useState } from "react";
 import { mutate } from "swr";
 import { useRouter } from "next/router";
 import { toast } from "@/hooks/use-toast";
-const formSchema = z.object({
-  email: z.string().min(1, { message: "Email is required" }),
-});
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import api from "@/lib/api";
+import { useTranslation } from "next-i18next";
 
 export default function Members() {
+  const { t } = useTranslation();
+  const formSchema = z.object({
+    email: z.string().min(1, { message: t("members.emailRequired") }),
+  });
   const router = useRouter();
   const { teamId } = router.query;
   const [isLoading, setIsLoading] = useState();
@@ -44,28 +46,21 @@ export default function Members() {
   async function onSubmit(data) {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/teams/${teamId}/member`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data?.email,
-          role: "member",
-        }),
+      const response = await api.post(`/teams/${teamId}/member`, {
+        email: data?.email,
+        role: "member",
       });
-      const responseData = await response.json();
-      if (!response.ok) {
+
+      const responseData = response.data;
+      if (responseData) {
+        form.reset();
+        mutate(`/teams/${teamId}/member`);
+      } else {
         toast({
           title: responseData?.message,
           variant: "destructive",
         });
-      } else {
-        // toast({ title: "Team has been created successfully", className: "bg-[#07bc0c]" });
-        form.reset();
       }
-
-      mutate(`${API_BASE_URL}/teams/${teamId}/member`);
     } catch (error) {
       console.log(error?.message, "error+++");
     } finally {
@@ -103,7 +98,7 @@ export default function Members() {
             </DialogTrigger>
             <DialogContent className="bg-white">
               <DialogHeader>
-                <DialogTitle>Invite to workspace</DialogTitle>
+                <DialogTitle>{t("members.inviteToWorkSpace")}</DialogTitle>
               </DialogHeader>
               <Form {...form}>
                 <form
@@ -115,7 +110,7 @@ export default function Members() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Board title</FormLabel>
+                        <FormLabel>{t("members.boardTitleLabel")}</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter email address or name"
@@ -128,9 +123,9 @@ export default function Members() {
                   />
 
                   <div className="flex justify-between gap-2">
-                    <p>Invite someone to this workspace with a link:</p>
-                    <Button type="submit" className="bg-primary">
-                      Copy Link
+                    <p>{t("members.inviteSomeoneToWorkSpace")}</p>
+                    <Button type="submit" className="bg-primary text-white">
+                      {t("members.copyLink")}
                     </Button>
                   </div>
                 </form>
@@ -148,11 +143,10 @@ export default function Members() {
           <div className="flex-1">
             <div className="mb-8">
               <h2 className="text-xl font-semibold mb-2">
-                Workspace members (1)
+                {t("members.workSpaceMember")} (1)
               </h2>
               <p className="text-muted-foreground">
-                Workspace members can view and join all Workspace visible boards
-                and create new boards in the Workspace.
+                {t("members.workSpaceDescription")}
               </p>
             </div>
 
@@ -177,14 +171,14 @@ export default function Members() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="sm">
-                    View boards (0)
+                    {t("members.viewBoards")} (0)
                   </Button>
                   <Button variant="ghost" size="sm">
-                    Admin
+                    {t("members.admin")}
                   </Button>
                   <Button variant="ghost" size="sm">
                     <X className="h-4 w-4" />
-                    Leave...
+                   {t("members.leave")}
                   </Button>
                 </div>
               </div>

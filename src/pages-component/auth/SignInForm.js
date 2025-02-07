@@ -21,9 +21,11 @@ import { mutate } from "swr";
 import { useState } from "react";
 import { useTranslation } from "next-i18next";
 import Cookies from "js-cookie";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { useRouter } from "next/navigation";
+import api from "@/lib/api";
 
 export default function SignInForm() {
+  const router=useRouter()
   const { t } = useTranslation();
   const FormSchema = z.object({
     userEmail: z.string().email({
@@ -53,38 +55,33 @@ export default function SignInForm() {
   async function onSubmit(data) {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data?.userEmail,
-          password: data?.password,
-        }),
+      const response = await api.post("/login", {
+        email: data?.userEmail,
+        password: data?.password,
       });
-      if (!response.ok) {
-        const result = await response.json();
-        toast({
-          title: result?.message,
-          variant: "destructive",
-        });
-      } else {
-        const responseData = await response.text();
-        localStorage.setItem("token", responseData);
-        Cookies.set("token", responseData, {
-          expires: 1,
-          path: "/",
-        })
-        
-        toast({ title: "Login Successful", className: "bg-[#07bc0c]" });
-        form.reset();
-      }
-
-      mutate(`${API_BASE_URL}/login`);
+    
+      const responseData = response.data;
+      console.log(responseData,"responseData")
+      Cookies.set("token", responseData, {
+        expires: 1,
+        path: "/",
+      });
+    
+      toast({ title: t("signIn.signInSuccess"), className: "bg-[#07bc0c]" });
+      
+      form.reset();
+      router.push("/teams");
+    
+      mutate(`/login`);
     } catch (error) {
-      console.log(error?.message, "error+++");
+      toast({
+        title: error?.response?.data?.message || "Login failed",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
+    
   }
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center">
