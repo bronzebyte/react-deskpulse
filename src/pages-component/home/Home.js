@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import deskpulseImage from "@/images/deskpulse.png";
 import Cookies from "js-cookie";
 import Image from "next/image";
+import { Button } from "@heroui/button";
 
 export default function HomePage() {
   const router = useRouter();
