@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import googleLogo from "@/images/googleLogo.webp";
 import logo from "@/images/logo.png";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { mutate } from "swr";
 import { useState } from "react";
@@ -23,6 +22,7 @@ import { useTranslation } from "next-i18next";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
+import {Image} from "@heroui/react";
 
 export default function SignInForm() {
   const router=useRouter()
@@ -104,12 +104,13 @@ export default function SignInForm() {
             
 
             <div className="relative h-64 md:h-96">
-              <Image
-                src={logo}
-                alt="Sign In Illustration"
-                fill
-                className="object-contain"
-              />
+            <Image
+      isBlurred
+      alt="HeroUI Album Cover"
+      className="m-5"
+      src="https://heroui.com/images/album-cover.png"
+      width={240}
+    />
             </div>
           </div>
 
@@ -163,7 +164,7 @@ export default function SignInForm() {
                     {loading ? "Loading..." : t("signIn.buttonText")}
                   </Button>
 
-                  <Button
+                  {/* <Button
                     className="w-full flex bg-[#EFF4FB] hover:bg-unset text-[#64748B] items-center justify-center gap-2"
                     onClick={(e) => e.preventDefault()}
                   >
@@ -175,9 +176,9 @@ export default function SignInForm() {
                       className="w-5 h-5"
                     />
                     {t("signIn.signInWithGoogle")}
-                  </Button>
+                  </Button> */}
 
-                  <p className="text-center text-gray-600">
+                  {/* <p className="text-center text-gray-600">
                     {t("signIn.dontHaveAccount")}{" "}
                     <Link
                       href="/sign-up"
@@ -185,7 +186,7 @@ export default function SignInForm() {
                     >
                       {t("signIn.signUp")}
                     </Link>
-                  </p>
+                  </p> */}
                 </form>
               </Form>
             </div>
