@@ -40,44 +40,50 @@ export default function SignUpForm() {
 
           <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
             <div className="max-w-md mx-auto">
-              <Form >
+              <Form>
                 <Input
-                  // placeholder="Enter your firstName"
-                  variant="bordered" type="text"
+                  isRequired
+                  variant="bordered"
+                  type="text"
                   label={t("signUp.firstNameLabel")}
                   name="firstName"
                 />
 
                 <Input
-                  // placeholder="Enter your lastName"
+                  isRequired
+                  variant="bordered"
                   type="text"
                   label={t("signUp.lastNameLabel")}
                   name="lastName"
                 />
 
                 <Input
-                  // placeholder="Enter your email"
+                  isRequired
+                  variant="bordered"
                   label={t("signUp.emailLabel")}
                   type="email"
                   name="userEmail"
                 />
 
                 <Input
-                  // placeholder="Enter your phoneNumber"
+                  isRequired
+                  variant="bordered"
                   label={t("signUp.phoneNumberLabel")}
                   type="number"
                   name="phoneNumber"
                 />
 
                 <Input
-                  // placeholder="6+ Characters, 1 Capital letter"
+                  isRequired
+                  variant="bordered"
                   label={t("signUp.passwordLabel")}
                   type="password"
                   name="password"
                 />
 
                 <Input
-                  // placeholder="6+ Characters, 1 Capital letter"
+                  isRequired
+                  variant="bordered"
                   label={t("signUp.reTypePasswordLabel")}
                   type="password"
                   name="confirmPassword"
