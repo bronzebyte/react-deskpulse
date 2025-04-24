@@ -1,114 +1,13 @@
 "use client";
 import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 import googleLogo from "@/images/googleLogo.webp";
 import logo from "@/images/logo.png";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { mutate } from "swr";
-import { useState } from "react";
 import { useTranslation } from "next-i18next";
-import api from "@/lib/api";
+import { Button, Form, Input } from "@heroui/react";
 
 export default function SignUpForm() {
   const { t } = useTranslation();
-
-  const FormSchema = z
-    .object({
-      userEmail: z.string().email({
-        message: "Please enter a valid email address.",
-      }),
-      password: z
-        .string()
-        .min(6, { message: t("signUp.emailValidation") })
-        .regex(/[A-Z]/, {
-          message: t("signUp.passwordValidation.capitalLetter"),
-        })
-        .regex(/[!@#$%^&*(),.?":{}|<>]/, {
-          message: t("signUp.passwordValidation.specialCharacter"),
-        }),
-      confirmPassword: z
-        .string()
-        .min(6, { message: t("signUp.passwordValidation.minLength") })
-        .regex(/[A-Z]/, {
-          message: t("signUp.passwordValidation.capitalLetter"),
-        })
-        .regex(/[!@#$%^&*(),.?":{}|<>]/, {
-          message: t("signUp.passwordValidation.specialCharacter"),
-        }),
-      firstName: z.string().min(4, {
-        message: t("signUp.firstNameMinLength"),
-      }),
-      lastName: z.string().min(4, {
-        message: t("signUp.lastNameMinLength"),
-      }),
-      phoneNumber: z.string().min(10, {
-        message: t("signUp.phoneNumberMinLength"),
-      }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t("signUp.passwordMismatch"),
-      path: ["confirmPassword"],
-    });
-
-  const [loading, setLoading] = useState(false);
-  const form = useForm({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      userEmail: "",
-      password: "",
-      confirmPassword: "",
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-    },
-  });
-
-  async function onSubmit(data) {
-    setLoading(true);
-    try {
-      const response = await api.post("/signup", {
-        firstname: data?.firstName,
-        lastname: data?.lastName,
-        phonenumber: data?.phoneNumber,
-        email: data?.userEmail,
-        password: data?.password,
-      });
-
-      const responseData = response.data;
-      console.log(responseData, "responseData");
-      
-      if (responseData) {
-        toast({ title: t("signUp.signUpSuccess"), className: "bg-[#07bc0c]" });
-        form.reset();
-      } else {
-        toast({
-          title: result?.message,
-          variant: "destructive",
-        });
-      }
-      mutate(`/signup`);
-    } catch (error) {
-      toast({
-        title: error?.response?.data?.message || "SignUp failed",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -141,144 +40,76 @@ export default function SignUpForm() {
 
           <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
             <div className="max-w-md mx-auto">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-full space-y-3"
+              <Form >
+                <Input
+                  // placeholder="Enter your firstName"
+                  variant="bordered" type="text"
+                  label={t("signUp.firstNameLabel")}
+                  name="firstName"
+                />
+
+                <Input
+                  // placeholder="Enter your lastName"
+                  type="text"
+                  label={t("signUp.lastNameLabel")}
+                  name="lastName"
+                />
+
+                <Input
+                  // placeholder="Enter your email"
+                  label={t("signUp.emailLabel")}
+                  type="email"
+                  name="userEmail"
+                />
+
+                <Input
+                  // placeholder="Enter your phoneNumber"
+                  label={t("signUp.phoneNumberLabel")}
+                  type="number"
+                  name="phoneNumber"
+                />
+
+                <Input
+                  // placeholder="6+ Characters, 1 Capital letter"
+                  label={t("signUp.passwordLabel")}
+                  type="password"
+                  name="password"
+                />
+
+                <Input
+                  // placeholder="6+ Characters, 1 Capital letter"
+                  label={t("signUp.reTypePasswordLabel")}
+                  type="password"
+                  name="confirmPassword"
+                />
+
+                <Button
+                  type="submit"
+                  className="text-white w-full bg-primary hover:bg-unset"
                 >
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.firstNameLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your firstName"
-                            {...field}
-                            type="text"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.lastNameLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your lastName"
-                            {...field}
-                            type="text"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="userEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.emailLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your email"
-                            {...field}
-                            type="email"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.phoneNumberLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your phoneNumber"
-                            {...field}
-                            type="number"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.passwordLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="6+ Characters, 1 Capital letter"
-                            {...field}
-                            type="password"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("signUp.reTypePasswordLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="6+ Characters, 1 Capital letter"
-                            {...field}
-                            type="password"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="submit"
-                    className="text-white w-full bg-primary hover:bg-unset"
-                  >
-                    {loading ? "Sending..." : t("signUp.buttonText")}
-                  </Button>
+                  {t("signUp.buttonText")}
+                </Button>
 
-                  <Button
-                    className="w-full flex bg-[#EFF4FB] hover:bg-unset text-[#64748B] items-center justify-center"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <Image
-                      src={googleLogo}
-                      alt="Google"
-                      width={20}
-                      height={20}
-                      className="w-5 h-5"
-                    />
-                    {t("signUp.signUpWithGoogle")}
-                  </Button>
+                <Button className="w-full flex bg-[#EFF4FB] hover:bg-unset text-[#64748B] items-center justify-center">
+                  <Image
+                    src={googleLogo}
+                    alt="Google"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5"
+                  />
+                  {t("signUp.signUpWithGoogle")}
+                </Button>
 
-                  <p className="text-center text-gray-600">
-                    {t("signUp.alreadyHaveAccount")}{" "}
-                    <Link
-                      href="/sign-in"
-                      className="text-blue-600 hover:underline"
-                    >
-                      {t("signUp.signIn")}
-                    </Link>
-                  </p>
-                </form>
+                <p className="text-center text-gray-600">
+                  {t("signUp.alreadyHaveAccount")}{" "}
+                  <Link
+                    href="/sign-in"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {t("signUp.signIn")}
+                  </Link>
+                </p>
               </Form>
             </div>
           </div>
