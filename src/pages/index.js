@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import dynamic from "next/dynamic";
+import Header from "@/components/header/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,12 +11,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-const HomePage = dynamic(() => import('@/pages-component/home/Home'), {
-    ssr: false, // Disable SSR for this component
-  });
+const HomePage = dynamic(() => import("@/pages-component/home/Home"), {
+  ssr: false,
+});
 export default function Home() {
-  
   return (
-    <HomePage/>
+    <>
+      <HomePage />
+    </>
   );
 }

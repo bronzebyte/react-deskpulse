@@ -9,7 +9,7 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/pages-component/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@heroui/theme/dist/components/(button|image|input|ripple|spinner|form).js"
+    "./node_modules/@heroui/theme/dist/components/(button|drawer|image|input|select|ripple|spinner|modal|form|listbox|divider|popover|scroll-shadow).js"
   ],
   theme: {
     extend: {

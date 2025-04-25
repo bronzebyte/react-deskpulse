@@ -84,3 +84,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+html {
+  transition: background-color 0.3s ease, color 0.3s ease; /* Optional: Smooth transition */
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+html.dark body {
+  background-color: #121212;
+  color: #ffffff !important;
+}

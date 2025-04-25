@@ -11,7 +11,7 @@ export default function SignInForm() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+    <div className="min-h-screen bg-gray-50 flex justify-center items-center dark:bg-gray-900">
       {/* Header Navigation */}
       <div className="container">
         <nav className="flex justify-between items-center  py-4 container mx-auto">
@@ -26,17 +26,17 @@ export default function SignInForm() {
             <p className="text-blue-500">{t("signIn.buttonText")}</p>
           </div>
         </nav>
-        <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm">
+        <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm dark:bg-gray-900">
           <div className="w-full md:w-1/2 p-8 lg:p-12 m-auto">
 
 
             <div className="relative h-64 md:h-96">
               <Image
-      src={logo}
-      alt="Sign In Illustration"
-      fill
-      className="object-contain"
-    />
+                src={logo}
+                alt="Sign In Illustration"
+                fill
+                className="object-contain"
+              />
             </div>
           </div>
 
@@ -61,7 +61,7 @@ export default function SignInForm() {
                 <Input
                   isRequired
                   // placeholder="6+ Characters, 1 Capital letter"
-                  variant="bordered" 
+                  variant="bordered"
                   label={t("signIn.passwordLabel")}
                   name="password"
                   type="password"

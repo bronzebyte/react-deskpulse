@@ -26,7 +26,6 @@ export const config = {
     "/sign-up",
     "/reset-password",
     "/teams",
-    "/project-view/:path*",
     "/members",
     "/members/:path*",
   ],
