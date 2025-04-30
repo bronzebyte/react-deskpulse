@@ -111,7 +111,7 @@ export const TaskColumn = () => {
                           onPress={() => handleAddCard(column._id)}
                           size="sm"
                           type="submit"
-                          className="bg-primary text-white hover:bg-primary-dark"
+                          className="bg-primary text-white hover:bg-primary-dark dark:bg-black"
                         >
                           Add Card
                         </Button>
@@ -119,7 +119,7 @@ export const TaskColumn = () => {
                           onPress={() => setAddingCardForColumnId(null)}
                           variant="ghost"
                           size="sm"
-                          className="text-black hover:bg-gray-200"
+                          className="text-black hover:bg-gray-200 dark:hover:bg-transparent"
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -130,9 +130,9 @@ export const TaskColumn = () => {
                   <Button
                     onPress={() => setAddingCardForColumnId(column._id)}
                     variant="ghost"
-                    className="w-full justify-start text-sm h-8 hover:bg-white/10 mt-2"
+                    className="w-full justify-start text-sm h-8 hover:bg-white/10 mt-2 dark:bg-black "
                   >
-                    <Plus className="h-4 w-4 mr-1" /> {t("tickets.addACard") || "Add a card"}
+                    <Plus className="h-4 w-4 mr-1" /> Add a card
                   </Button>
                 )}
               </CardBody>

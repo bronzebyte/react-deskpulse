@@ -19,7 +19,7 @@ export default function SignInForm() {
             {t("signIn.buttonText")}
           </p>
           <div className="flex items-center gap-2 text-sm">
-            <Link href="/dashboard" className="text-gray-600">
+            <Link href="/" className="text-gray-600">
               {t("signIn.dashboard")}
             </Link>
             <span className="text-gray-400">/</span>
@@ -40,7 +40,7 @@ export default function SignInForm() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
+          <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray dark:border-none">
             <div className="max-w-md mx-auto">
 
 

@@ -10,14 +10,14 @@ export default function SignUpForm() {
   const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+    <div className="min-h-screen bg-gray-50 flex justify-center items-center dark:bg-gray-900">
       <div className="container">
         <nav className="flex justify-between items-center py-4 container mx-auto">
           <p className="text-title-md2 font-semibold text-black dark:text-white">
             {t("signUp.signUp")}
           </p>
           <div className="flex items-center gap-2 text-sm">
-            <Link href="/dashboard" className="text-gray-600">
+            <Link href="/" className="text-gray-600">
               {t("signUp.dashboard")}
             </Link>
             <span className="text-gray-400">/</span>
@@ -26,7 +26,7 @@ export default function SignUpForm() {
             </p>
           </div>
         </nav>
-        <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm">
+        <div className="flex flex-col md:flex-row container mx-auto bg-white rounded-lg shadow-sm dark:bg-gray-900">
           <div className="w-full md:w-1/2 p-8 lg:p-12 m-auto">
             <div className="relative h-64 md:h-96">
               <Image
@@ -38,7 +38,7 @@ export default function SignUpForm() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray">
+          <div className="w-full md:w-1/2 p-8 lg:p-12 border-l border-l-gray dark:border-none">
             <div className="max-w-md mx-auto">
               <Form>
                 <Input

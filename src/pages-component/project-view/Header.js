@@ -2,7 +2,8 @@ import { Avatar, Card, CardBody, Input, Tab, Tabs } from "@heroui/react";
 import { TaskColumn } from "../taskColumn/TaskColumn";
 import { AddList } from "./addList/AddList";
 import { SearchIcon, User, User2 } from "lucide-react";
-
+import epicLogo from "@/images/EpicLogo.png"
+import Image from "next/image";
 export default function WorkSpaceHeader() {
   return (
     <header>
@@ -11,7 +12,7 @@ export default function WorkSpaceHeader() {
         className="w-full"
         classNames={{
           tabList:
-            "gap-6 w-full relative rounded-none p-0 border-b border-[#06b6d4]",
+            "gap-6 w-full relative rounded-none p-0 border-b border-[#06b6d4] dark:text-white",
           cursor: "w-full bg-[#22d3ee]",
           tab: "max-w-fit px-0 h-12",
           tabContent: "group-data-[selected=true]:text-[#06b6d4]",
@@ -19,7 +20,7 @@ export default function WorkSpaceHeader() {
         color="primary"
         variant="underlined"
       >
-        <Tab key="photos" title="Board" className="border-none rounded-sm">
+        <Tab key="board" title="Board" className="border-none rounded-sm dark:text-white">
           <Card className="rounded-sm shadow-none">
             <CardBody className="rounded-sm shadow-none">
               <div >
@@ -43,8 +44,15 @@ export default function WorkSpaceHeader() {
             </CardBody>
           </Card>
         </Tab>
-        <Tab key="music" title="Music" />
-        <Tab key="videos" title="Videos" />
+        <Tab key="list" title="List" />
+        {/* <Tab key="videos" title="Videos" /> */}
+        <Tab key="epic" title={
+          <div className="flex items-center space-x-2">
+            <Image src={epicLogo} />
+            <span>Epic</span>
+          </div>
+        } />
+
       </Tabs>
     </header>
   );

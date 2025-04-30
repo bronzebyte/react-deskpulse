@@ -7,10 +7,11 @@ export const CommonModel = ({
     onClose,
     onOpenChange,
     children,
+    size,
     ...restProps
 }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} placement="top-center" size="3xl">
+        <Modal isOpen={isOpen} onClose={onClose} placement="top-center" size={size ? size : "3xl"}>
             <ModalContent>
                 {(onClose) => (
                     <>

@@ -31,7 +31,7 @@ export default function Sidebar() {
         </div>
         {/* <ScrollArea className="flex-1"> */}
         <p
-          className="px-4 py-2 text-gray-800 flex items-center gap-3 cursor-pointer"
+          className="px-4 py-2 text-gray-800 dark:text-white flex items-center gap-3 cursor-pointer"
           onClick={onOpen}
         >
           <TbDeviceMobile />

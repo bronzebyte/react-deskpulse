@@ -10,7 +10,10 @@ export default function ProjectView() {
     <>
 
       <div className="flex ">
-        <Sidebar />
+        <div className="sm:block hidden">
+
+          <Sidebar />
+        </div>
         <div
           className=" gap-4 overflow-x-hidden h-[calc(100vh-48px)] w-full text-black"
 
