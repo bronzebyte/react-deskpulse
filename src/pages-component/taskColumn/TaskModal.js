@@ -13,6 +13,7 @@ import {
 import { CommonModel } from "@/components/common/modal/CommonModal";
 import ReactQuill from "react-quill";
 import { useState } from "react";
+import SunEditor from "suneditor-react";
 export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
     const [value, setValue] = useState("");
     const itemClasses = {
@@ -81,10 +82,21 @@ export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
 
                             <div className="border bg-gray-50 dark:bg-transparent rounded-md p-4">
 
-                                <ReactQuill
-                                    theme="snow"
-                                    value={value}
-                                    onChange={setValue}
+                                <SunEditor
+
+                                    setOptions={{
+                                        height: 300,
+                                        buttonList: [
+                                            ["undo", "redo"],
+                                            ["formatBlock", "fontSize", "bold", "underline", "italic", "strike"],
+                                            ["fontColor", "hiliteColor", "textStyle"],
+                                            ["align", "list", "table"],
+                                            ["link", "image", "video"],
+                                            ["fullScreen", "showBlocks", "codeView"],
+                                        ],
+                                        imageFileInput: true,
+                                        imageUploadUrl: "",
+                                    }}
                                 />
                             </div>
                             <div className="my-2">
@@ -135,10 +147,26 @@ export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
                                         <Card className="rounded-sm shadow-none">
                                             <CardBody className="rounded-sm shadow-none">
                                                 <div>
-                                                    <ReactQuill
+                                                    {/* <ReactQuill
                                                         theme="snow"
                                                         value={value}
                                                         onChange={setValue}
+                                                    /> */}
+                                                    <SunEditor
+
+                                                        setOptions={{
+                                                            height: 300,
+                                                            buttonList: [
+                                                                ["undo", "redo"],
+                                                                ["formatBlock", "fontSize", "bold", "underline", "italic", "strike"],
+                                                                ["fontColor", "hiliteColor", "textStyle"],
+                                                                ["align", "list", "table"],
+                                                                ["link", "image", "video"],
+                                                                ["fullScreen", "showBlocks", "codeView"],
+                                                            ],
+                                                            imageFileInput: true,
+                                                            imageUploadUrl: "", // Optional: use your server URL here for upload
+                                                        }}
                                                     />
                                                     <div className="flex gap-3">
 

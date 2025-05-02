@@ -4,6 +4,7 @@ import { AddList } from "./addList/AddList";
 import { SearchIcon, User, User2 } from "lucide-react";
 import epicLogo from "@/images/EpicLogo.png"
 import Image from "next/image";
+import { ProjectListView } from "./ProjectList";
 export default function WorkSpaceHeader() {
   return (
     <header>
@@ -44,7 +45,13 @@ export default function WorkSpaceHeader() {
             </CardBody>
           </Card>
         </Tab>
-        <Tab key="list" title="List" />
+        <Tab key="list" title="List" >
+          <Card className="rounded-sm shadow-none">
+            <CardBody className="rounded-sm shadow-none">
+              <ProjectListView />
+            </CardBody>
+          </Card>
+        </Tab>
         {/* <Tab key="videos" title="Videos" /> */}
         <Tab key="epic" title={
           <div className="flex items-center space-x-2">

@@ -4,7 +4,7 @@ import "../../i18.js";
 import { HeroUIProvider } from "@heroui/react";
 import 'react-quill/dist/quill.snow.css';
 // import Header from "@/components/common/header/Header.js";
-
+import 'suneditor/dist/css/suneditor.min.css';
 import 'tailwindcss/tailwind.css'
 import dynamic from "next/dynamic.js";
 const Header = dynamic(() => import('@/components/common/header/Header.js'), { ssr: false });
