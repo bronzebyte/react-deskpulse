@@ -11,7 +11,7 @@ import { CommonDrawer } from "../drawer/Drawer";
 import darkModeImage from "@/images/nightMode.png"
 import lightModeImage from "@/images/lightMode.png"
 import { useRouter } from "next/navigation";
-import ProtectedComponent from "../ProtectedComponent/ProtectedComponent";
+import ProtectedComponent from "../protectedComponent/ProtectedComponent";
 export default function Header() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     if (typeof window !== "undefined") {

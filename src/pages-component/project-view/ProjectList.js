@@ -73,10 +73,8 @@ export const ProjectListView = () => {
 
     const createTask = () => {
         setShowCreateInput(false)
-        console.log("created++++")
     }
 
-    console.log(selectedTask, "selectedTask")
     return (
         <div className="w-full border border-gray-200  ">
             <Table aria-label="Example empty table cursor-pointer shadow-none">

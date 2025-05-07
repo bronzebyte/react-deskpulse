@@ -147,11 +147,7 @@ export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
                                         <Card className="rounded-sm shadow-none">
                                             <CardBody className="rounded-sm shadow-none">
                                                 <div>
-                                                    {/* <ReactQuill
-                                                        theme="snow"
-                                                        value={value}
-                                                        onChange={setValue}
-                                                    /> */}
+
                                                     <SunEditor
 
                                                         setOptions={{
@@ -165,7 +161,7 @@ export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
                                                                 ["fullScreen", "showBlocks", "codeView"],
                                                             ],
                                                             imageFileInput: true,
-                                                            imageUploadUrl: "", // Optional: use your server URL here for upload
+                                                            imageUploadUrl: "",
                                                         }}
                                                     />
                                                     <div className="flex gap-3">
@@ -228,11 +224,10 @@ export const TaskModel = ({ isOpen, onClose, onOpen, task }) => {
                                 </AccordionItem>
 
                             </Accordion>
-                            {/* <p>Details</p>
-                            <Settings /> */}
+
                         </div>
                     </div>
-                    {/* </CardContent> */}
+
                 </div>
             </CommonModel>
         </div>
